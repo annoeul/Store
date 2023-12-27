@@ -1,4 +1,3 @@
-import * as React from "react"
 import CssBaseline from "@mui/material/CssBaseline"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
@@ -12,6 +11,9 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import UserInfoForm from "./userInfo"
 import StoreInfoForm from "./storeInfo"
+import { useState } from "react"
+import { useSelector } from "react-redux"
+import { doSignUp } from "../../api/authApi"
 
 const steps = ["회원정보", "가게정보"]
 
@@ -21,18 +23,30 @@ function getStepContent(step: number) {
       return <UserInfoForm />
     case 1:
       return <StoreInfoForm />
-    // case 2:
-    // return <Review />
+    case 2:
+      return <>Success</>
     default:
       throw new Error("Unknown step")
   }
 }
 
 export default function RegisterForm() {
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = useState(0)
+  const userInfo = useSelector((state) => state.userInfo)
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setActiveStep(activeStep + 1)
+    if (activeStep === 1) {
+      try {
+        console.log(userInfo)
+        await doSignUp(userInfo)
+        // doSignUp 함수가 완료된 후에 이 부분이 실행됨
+      } catch (error) {
+        // doSignUp 함수에서 에러가 발생한 경우 처리
+        console.error("Error during handleNext:", error)
+        // 에러 처리 로직 추가
+      }
+    }
   }
 
   const handleBack = () => {
@@ -70,7 +84,7 @@ export default function RegisterForm() {
             ))}
           </Stepper>
           {activeStep === steps.length ? (
-            <React.Fragment>
+            <>
               <Typography variant="h5" gutterBottom>
                 Thank you for your order.
               </Typography>
@@ -78,9 +92,9 @@ export default function RegisterForm() {
                 Your order number is #2001539. We have emailed your order confirmation, and will send you an update when
                 your order has shipped.
               </Typography>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
               {getStepContent(activeStep)}
               <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                 {activeStep !== 0 && (
@@ -89,10 +103,10 @@ export default function RegisterForm() {
                   </Button>
                 )}
                 <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
+                  {activeStep === steps.length - 1 ? "가입하기" : "다음"}
                 </Button>
               </Box>
-            </React.Fragment>
+            </>
           )}
         </Paper>
       </Container>

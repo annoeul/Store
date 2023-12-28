@@ -4,26 +4,27 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import InputAdornment from "@mui/material/InputAdornment"
 import useInput from "../../../hooks/useInput"
-import { UserInfo } from "../../../model/userInfo"
 import { useDispatch } from "react-redux"
-import { setUserInfo } from "../../../store/slice/userInfo"
 import { checkEmail } from "../../../api/authApi"
+import { ChangeEvent } from "react"
+import { UserInfo } from "../../../model/userInfo"
+import { setUserInfo } from "../../../store/slice/userInfo"
 
 export default function UserInfoForm() {
   const dispatch = useDispatch()
-  const { userInput, onChange } = useInput({
+
+  const { userInput, onChange } = useInput<UserInfo>({
     email: "",
     password: "",
     call: "",
     ownerName: "",
   })
 
-  // const handleEmailChange = (e) => {
-  //   setEmail(e.target.value)
-  //   setIsEmailValid(true) // Reset validation when email changes
-  // }
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e)
+    dispatch(setUserInfo(userInput))
+  }
 
-  const handleDuplicateCheck = async () => {}
   return (
     <>
       <Typography variant="h6" gutterBottom>
@@ -40,7 +41,7 @@ export default function UserInfoForm() {
             fullWidth
             variant="standard"
             value={userInput.email}
-            onChange={onChange}
+            onChange={handleOnChange}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -53,11 +54,35 @@ export default function UserInfoForm() {
         <Grid item xs={12}>
           <TextField
             required
+            id="ownerName"
+            name="ownerName"
+            variant="standard"
+            label="이름"
+            fullWidth
+            value={userInput.ownerName}
+            onChange={handleOnChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            id="call"
+            name="call"
+            variant="standard"
+            label="휴대폰번호"
+            fullWidth
+            value={userInput.call}
+            onChange={handleOnChange}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
             id="password"
             variant="standard"
             name="password"
             value={userInput.password}
-            onChange={onChange}
+            onChange={handleOnChange}
             label="비밀번호"
             fullWidth
           />
@@ -70,30 +95,6 @@ export default function UserInfoForm() {
             name="checkPassword"
             label="비밀번호 확인"
             fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="call"
-            name="call"
-            variant="standard"
-            label="휴대폰번호"
-            fullWidth
-            value={userInput.call}
-            onChange={onChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="ownerName"
-            name="ownerName"
-            variant="standard"
-            label="이름"
-            fullWidth
-            value={userInput.ownerName}
-            onChange={onChange}
           />
         </Grid>
       </Grid>

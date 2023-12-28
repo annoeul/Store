@@ -1,7 +1,6 @@
 import { ChangeEvent, useState } from "react"
-import { UserInfo } from "../model/userInfo"
 
-function useInput(initialState) {
+function useInput<T>(initialState: T) {
   const [userInput, setUserInput] = useState(initialState)
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {

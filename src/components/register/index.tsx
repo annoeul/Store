@@ -36,15 +36,28 @@ export default function RegisterForm() {
 
   const handleNext = async () => {
     setActiveStep(activeStep + 1)
+    console.log(userInfo)
+
     if (activeStep === 1) {
       try {
-        console.log(userInfo)
-        await doSignUp(userInfo)
-        // doSignUp 함수가 완료된 후에 이 부분이 실행됨
+        const response = await doSignUp({
+          email: userInfo.email,
+          password: userInfo.password,
+          storeName: userInfo.storeName,
+          ownerName: userInfo.ownerName,
+          call: userInfo.call,
+          address: userInfo.address,
+          crn: userInfo.crn,
+        })
+        if (response.status === 201) {
+          alert("회원가입에 성공하셨습니다!. 로그인 후 이용해주세요.")
+          // navigate("/") // 로그인 후 '/'로 이동
+        } else {
+          return
+        }
       } catch (error) {
-        // doSignUp 함수에서 에러가 발생한 경우 처리
-        console.error("Error during handleNext:", error)
-        // 에러 처리 로직 추가
+        alert("회원가입에 실패했습니다.", error.message)
+        return
       }
     }
   }

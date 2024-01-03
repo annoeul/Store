@@ -32,3 +32,13 @@ export const doSignUp = async (data) => {
     throw error
   }
 }
+
+export const doLogin = async (data) => {
+  try {
+    const response = await axiosApi.post("public/auth", data)
+    return response.data
+  } catch (error) {
+    console.error("Error during signUp:", error)
+    throw error
+  }
+}

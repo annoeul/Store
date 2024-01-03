@@ -4,3 +4,8 @@ export type UserInfo = {
   call: string
   ownerName: string
 }
+
+export type LoginInfo = {
+  email: string
+  password: string
+}
